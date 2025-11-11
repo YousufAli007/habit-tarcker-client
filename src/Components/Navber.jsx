@@ -3,6 +3,7 @@ import Container from './Container';
 import { Link, NavLink } from 'react-router';
 
 const Navber = () => {
+  const 
   const links = (
     <>
       <li>
@@ -31,13 +32,16 @@ const Navber = () => {
             </h1>
           </div>
           <div className="navbar-center ">
-            <ul className='flex space-x-2'>
-              {links}
-            </ul>
+            <ul className="flex space-x-2">{links}</ul>
           </div>
           <div className="navbar-end">
-            
-            <Link to='/login'>Login</Link>
+            <div>
+
+            </div>
+            <div className='flex gap-2'>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Regoster</Link>
+            </div>
           </div>
         </div>
       </Container>
