@@ -1,11 +1,61 @@
-import { useState } from "react";
+ 
 import { Mail, Lock, User, Link2, ArrowRight, Camera } from "lucide-react";
+import { use } from "react";
+import AuthContext from "../Context/AuthContext";
+import { toast } from "react-toastify";
+import { updateProfile } from "firebase/auth";
+import { useNavigate } from "react-router";
 
 export default function RegisterForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [photoURL, setPhotoURL] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate =useNavigate()
+  const { crateAuth, signInGoogle } = use(AuthContext);
+  // Google Login
+  const handleGoogleLogin =()=>{
+    signInGoogle()
+    .then(res => {
+      console.log(res)
+    })
+    .catch(error =>{
+       toast.error(error)
+    })
+  }
+   
+  // handeRegister Form
+ const handleRegiseUser =(e)=>{
+  e.preventDefault()
+   const name =e.target.name.value;
+   const email=e.target.email.value;
+   const photoURL = e.target.photoURL.value;
+   const password =e.target.password.value;
+    
+   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+   if (!passwordRegex.test(password)){
+    toast.success(
+      "Password must have at least one uppercase, one lowercase, and be at least 6 characters long."
+    );
+    // alert(
+    //   "Password must have at least one uppercase, one lowercase, and be at least 6 characters long."
+    // );
+    return;
+   }
+     crateAuth(email, password)
+       .then((res) => {
+         updateProfile(res.user, {
+           displayName: name,
+           photoURL: photoURL,
+         })
+         .then(()=>{
+
+         })
+         .catch(()=>{});
+         toast.success("Register successfully");
+         navigate('/')
+       
+       })
+       .catch((error) => {
+         toast.error(error.message) 
+       });
+ }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
@@ -27,7 +77,7 @@ export default function RegisterForm() {
           </div>
 
           {/* Form */}
-          <form className="space-y-6">
+          <form onSubmit={handleRegiseUser} className="space-y-6">
             {/* Name */}
             <div>
               <label className="block text-sm font-medium text-purple-100 mb-2">
@@ -37,8 +87,7 @@ export default function RegisterForm() {
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300 w-5 h-5" />
                 <input
                   type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  name="name"
                   className="w-full pl-11 pr-4 py-3 bg-white/15 border border-white/20 rounded-xl text-white placeholder-purple-300 
                            focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent 
                            transition-all duration-200"
@@ -56,8 +105,7 @@ export default function RegisterForm() {
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300 w-5 h-5" />
                 <input
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
                   className="w-full pl-11 pr-4 py-3 bg-white/15 border border-white/20 rounded-xl text-white placeholder-purple-300 
                            focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent 
                            transition-all duration-200"
@@ -76,15 +124,14 @@ export default function RegisterForm() {
                 <Link2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300 w-5 h-5" />
                 <input
                   type="url"
-                  value={photoURL}
-                  onChange={(e) => setPhotoURL(e.target.value)}
+                  name="photoURL"
                   className="w-full pl-11 pr-4 py-3 bg-white/15 border border-white/20 rounded-xl text-white placeholder-purple-300 
                            focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent 
                            transition-all duration-200"
                   placeholder="https://example.com/avatar.jpg"
                 />
               </div>
-              {photoURL && (
+              {/* {photoURL && (
                 <div className="mt-3 flex justify-center">
                   <img
                     src={photoURL}
@@ -93,7 +140,7 @@ export default function RegisterForm() {
                     onError={(e) => (e.target.style.display = "none")}
                   />
                 </div>
-              )}
+              )} */}
             </div>
 
             {/* Password */}
@@ -105,8 +152,7 @@ export default function RegisterForm() {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300 w-5 h-5" />
                 <input
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
                   className="w-full pl-11 pr-4 py-3 bg-white/15 border border-white/20 rounded-xl text-white placeholder-purple-300 
                            focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent 
                            transition-all duration-200"
@@ -136,6 +182,7 @@ export default function RegisterForm() {
 
           {/* Google Login */}
           <button
+            onClick={handleGoogleLogin}
             className="w-full py-3 px-4 bg-white/10 hover:bg-white/20 border border-white/30 
                            text-white font-medium rounded-xl flex items-center justify-center gap-3 
                            transition-all duration-200"

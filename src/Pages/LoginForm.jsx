@@ -1,10 +1,40 @@
  
 import { Mail, Lock, ArrowRight } from "lucide-react";
-import { Link, Links } from "react-router";
+import { use } from "react";
+import { Link, Links, useNavigate } from "react-router";
+import AuthContext from "../Context/AuthContext";
+import { toast } from "react-toastify";
 
 export default function LoginForm() {
-  
+  const { signInGoogle, singInEmailPassword } = use(AuthContext);
+  // Google Login 
+  const navigate =useNavigate()
+  const handleGoogleLogin =()=>{
+    signInGoogle()
+    .then(()=>{
+     
+    })
+    .catch(error =>{
+      toast.error(error.message)
+       
+    })
+  }
 
+  // Login Email and Passwoer
+  const handleLoginEmailPassword =(e)=>{
+    e.preventDefault()
+    const email =e.target.email.value;
+    const password = e.target.password.value;
+     singInEmailPassword(email,password)
+     .then(()=>{
+      toast.success("Login Success")
+      e.target.reset()
+      navigate('/')
+     })
+     .catch(error =>{
+       toast.error(error.message)
+     })
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
       {/* Glassmorphic Card */}
@@ -25,7 +55,7 @@ export default function LoginForm() {
           </div>
 
           {/* Form */}
-          <form className="space-y-6">
+          <form onSubmit={handleLoginEmailPassword} className="space-y-6">
             {/* Email */}
             <div>
               <label className="block text-sm font-medium text-purple-100 mb-2">
@@ -34,6 +64,7 @@ export default function LoginForm() {
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300 w-5 h-5" />
                 <input
+                  name="email"
                   type="email"
                   className="w-full pl-11 pr-4 py-3 bg-white/15 border border-white/20 rounded-xl text-white placeholder-purple-300 
                            focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent 
@@ -51,6 +82,7 @@ export default function LoginForm() {
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300 w-5 h-5" />
                 <input
+                  name="password"
                   type="password"
                   className="w-full pl-11 pr-4 py-3 bg-white/15 border border-white/20 rounded-xl text-white placeholder-purple-300 
                            focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent 
@@ -81,6 +113,7 @@ export default function LoginForm() {
 
           {/* Google Login */}
           <button
+            onClick={handleGoogleLogin}
             className="w-full py-3 px-4 bg-white/10 hover:bg-white/20 border border-white/30 
                            text-white font-medium rounded-xl flex items-center justify-center gap-3 
                            transition-all duration-200"
@@ -110,6 +143,7 @@ export default function LoginForm() {
           <p className="text-center mt-8 text-purple-200">
             Don’t have an account?{" "}
             <Link
+              to="/register"
               className="font-semibold text-white hover:text-purple-300 underline underline-offset-4 
                        transition-colors duration-200"
             >
