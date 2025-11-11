@@ -6,14 +6,13 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBzvEUM0wuRSvr5NHhVuVZpEgxWb4vFGYc",
-  authDomain: "habit-tracker-8ecc9.firebaseapp.com",
-  projectId: "habit-tracker-8ecc9",
-  storageBucket: "habit-tracker-8ecc9.firebasestorage.app",
-  messagingSenderId: "716851353475",
-  appId: "1:716851353475:web:9e07c941832989c026c8b6",
-};
-
+  apiKey:import.meta.env.VITE_APIKEY,  
+  authDomain:import.meta.env.VITE_AUTHDOMAIN, 
+  projectId:  import.meta.env.VITE_PROJECTID,
+  storageBucket:import.meta.env.VITE_STORAGEBUCKET,  
+  messagingSenderId:import.meta.env.VITE_MESSAGINGSENDERID,  
+  appId: import.meta.env.VITE_APPID,
+}
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 // Initialize Firebase Authentication and get a reference to the service
