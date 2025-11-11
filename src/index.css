@@ -5,3 +5,6 @@
  *{
    font-family: "Poppins", sans-serif;
  }
+ a.active{
+  @apply bg-purple-500 p-1 rounded-xs text-white
+ }
