@@ -36,7 +36,8 @@ const Navber = () => {
             </ul>
           </div>
           <div className="navbar-end">
-            <a className="btn">Log Out</a>
+            
+            <Link to='/login'>Login</Link>
           </div>
         </div>
       </Container>

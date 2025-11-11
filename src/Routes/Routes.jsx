@@ -4,6 +4,7 @@ import Home from "../Pages/Home";
 import MyHabit from "../Pages/MyHabit";
 import PublicHabit from "../Pages/PublicHabit";
 import AddHabit from "../Pages/AddHabit";
+import LoginForm from "../Pages/LoginForm";
 
 const router =createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router =createBrowserRouter([
       {
         path:'addHabit',
         element:<AddHabit/>
+      },
+      {
+        path:'login',
+        element:<LoginForm/>
       }
     ]
   }
