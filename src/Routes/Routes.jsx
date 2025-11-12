@@ -7,36 +7,36 @@ import AddHabit from "../Pages/AddHabit";
 import LoginForm from "../Pages/LoginForm";
 import RegisterForm from "../Pages/RegisterForm";
 
-const router =createBrowserRouter([
+const router = createBrowserRouter([
   {
-    path:'/',
-    element:<Layout/>,
-    children:[
+    path: "/",
+    element: <Layout />,
+    children: [
       {
-        index:true,
-        element:<Home/>
+        index: true,
+        element: <Home />,
       },
       {
-        path:'myhabit',
-        element:<MyHabit/>
+        path: "myhabit",
+        element: <MyHabit />,
       },
       {
-        path:'publicHabit',
-        element:<PublicHabit/>
+        path: "publicHabit",
+        element: <PublicHabit />,
       },
       {
-        path:'addHabit',
-        element:<AddHabit/>
+        path: "addHabit",
+        element: <AddHabit />,
       },
       {
-        path:'login',
-        element:<LoginForm/>
+        path: "login",
+        element: <LoginForm />,
       },
       {
-        path:'register',
-        element:<RegisterForm/>
-      }
-    ]
-  }
-])
+        path: "register",
+        element: <RegisterForm />,
+      },
+    ],
+  },
+]);
 export default router;
