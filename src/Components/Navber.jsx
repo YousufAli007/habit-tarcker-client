@@ -4,11 +4,23 @@
  import { RiMenu3Fill } from "react-icons/ri";
  import { IoMdClose } from "react-icons/io";
 import AuthContext from "../Context/AuthContext";
+import { toast } from "react-toastify";
 
  const Navber = () => {
    const [showManue, setShowManue] = useState(false);
-  const {user}=use(AuthContext);
-  console.log(user)
+   const [showUser,setShowUser]=useState(false)
+  const { user, signOutUser } = use(AuthContext);
+  // console.log(user)
+  // singOut 
+  const handleSingOut =()=>{
+    signOutUser()
+      .then(() => {
+        toast.success("Log out success");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  }
    
    const links = (
      <>
@@ -69,29 +81,75 @@ import AuthContext from "../Context/AuthContext";
              </div>
 
              {/* Auth Buttons - DaisyUI Outline Style */}
-             <div className="flex gap-2 ">
-               <Link
-                 to="/login"
-                 className="btn btn-outline btn-sm text-purple-300 border-purple-300 hover:bg-purple-300 hover:text-slate-900
+             <div>
+               {user ? (
+                 <div className="ml-2 relative">
+                   <img
+                     onClick={() => setShowUser(!showUser)}
+                     src={user?.providerData[0].photoURL}
+                      referrerPolicy="no-referrer"
+                     className="w-[50px] rounded-full"
+                     alt=""
+                   />
+                   {/* dropdown */}
+                   {showUser && (
+                     <div className="absolute right-0.5 top-12 bg-slate-800/50  rounded-box p-4 mt-2 border border-purple-500/30 space-y-1  z-10">
+                       <h1 className="text-purple-300 hover:text-white">
+                         {user?.displayName}
+                       </h1>
+                       <h2 className="text-purple-300 hover:text-white">
+                         {user?.email}
+                       </h2>
+                       <button
+                         onClick={handleSingOut}
+                         className="btn btn-outline btn-sm text-purple-300 border-purple-300 hover:bg-purple-300 hover:text-slate-900
+                       font-semibold text-[14px]"
+                       >
+                         Log Out
+                       </button>
+                     </div>
+                   )}
+                   {/* <div className="absolute right-0.5 top-12 bg-slate-800/50  rounded-box p-4 mt-2 border border-purple-500/30 space-y-1">
+                     <h1 className="text-purple-300 hover:text-white">
+                       {user?.displayName}
+                     </h1>
+                     <h2 className="text-purple-300 hover:text-white">
+                       {user?.email}
+                     </h2>
+                     <button
+                       className="btn btn-outline btn-sm text-purple-300 border-purple-300 hover:bg-purple-300 hover:text-slate-900
+                       font-semibold text-[14px]"
+                     >
+                       Log Out
+                     </button>
+                   </div> */}
+                 </div>
+               ) : (
+                 <div className="flex gap-2 ">
+                   <Link
+                     to="/login"
+                     className="btn btn-outline btn-sm text-purple-300 border-purple-300 hover:bg-purple-300 hover:text-slate-900
                  font-semibold text-[14px]
                  "
-               >
-                 Login
-               </Link>
-               <Link
-                 to="/register"
-                 className="btn btn-outline btn-sm text-purple-300 border-purple-300 hover:bg-purple-300 hover:text-slate-900
+                   >
+                     Login
+                   </Link>
+                   <Link
+                     to="/register"
+                     className="btn btn-outline btn-sm text-purple-300 border-purple-300 hover:bg-purple-300 hover:text-slate-900
                  font-semibold text-[14px]"
-               >
-                 Register
-               </Link>
+                   >
+                     Register
+                   </Link>
+                 </div>
+               )}
              </div>
            </div>
          </div>
 
          {/* Mobile Menu */}
          <div
-           className={`flex justify-center items-center md:hidden bg-slate-800/50  rounded-box p-4 mt-2 border border-purple-500/30 ${
+           className={`flex justify-center items-center md:hidden bg-slate-800/50  rounded-box p-4   border border-purple-500/30 ${
              showManue || "hidden"
            }`}
          >

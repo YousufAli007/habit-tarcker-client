@@ -12,7 +12,7 @@ export default function LoginForm() {
   const handleGoogleLogin =()=>{
     signInGoogle()
     .then(()=>{
-     
+     navigate('/')
     })
     .catch(error =>{
       toast.error(error.message)

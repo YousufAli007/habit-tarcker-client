@@ -12,11 +12,11 @@ export default function RegisterForm() {
   // Google Login
   const handleGoogleLogin =()=>{
     signInGoogle()
-    .then(res => {
-      console.log(res)
+    .then(() => {
+       navigate('/')
     })
     .catch(error =>{
-       toast.error(error)
+       toast.error(error.message)
     })
   }
    
