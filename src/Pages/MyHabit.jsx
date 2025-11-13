@@ -23,7 +23,7 @@ const MyHabit = () => {
     setSelectedHabit(habit); // store which habit we are editing
     ref.current.showModal(); // open modal
   };
-
+  // form update 
  const handleFromUpdate = async (e) => {
    e.preventDefault();
 
@@ -55,7 +55,26 @@ const MyHabit = () => {
      toast.error(error)
    }
  };
+// delate 
+const handleDelete = async (habitId) => {
+  try {
+    const res = await axios.delete(`http://localhost:3000/habits/${habitId}`);
 
+    if (res.data.success || res.data.deletedCount === 1) {
+      toast.success("Habit deleted successfully!");
+
+      // Remove from local state
+      setMyHabits((prev) => prev.filter((habit) => habit._id !== habitId));
+    } else {
+      toast.error(res.data.message || "Failed to delete habit");
+    }
+  } catch (error) {
+    console.error("Delete error:", error);
+    toast.error("Failed to delete habit!");
+  }
+};
+
+ 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
       <div className="max-w-5xl mx-auto">
@@ -122,7 +141,10 @@ const MyHabit = () => {
                       >
                         Update
                       </button>
-                      <button className="text-rose-400 hover:text-rose-300 transition">
+                      <button
+                        onClick={() => handleDelete(habit._id)}
+                        className="text-rose-400 hover:text-rose-300 transition"
+                      >
                         Delete
                       </button>
                       <button className="text-emerald-400 hover:text-emerald-300 font-bold transition">
@@ -146,10 +168,7 @@ const MyHabit = () => {
             </h3>
 
             {selectedHabit ? (
-              <form
-                onSubmit={handleFromUpdate}
-                className="space-y-5"
-              >
+              <form onSubmit={handleFromUpdate} className="space-y-5">
                 <div>
                   <label className="block text-sm text-purple-200 mb-1">
                     Habit Title
