@@ -6,6 +6,7 @@ import PublicHabit from "../Pages/PublicHabit";
 import AddHabit from "../Pages/AddHabit";
 import LoginForm from "../Pages/LoginForm";
 import RegisterForm from "../Pages/RegisterForm";
+import Private from "../Private/Private";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,11 @@ const router = createBrowserRouter([
       },
       {
         path: "addHabit",
-        element: <AddHabit />,
+        element: (
+          <Private>
+            <AddHabit />
+          </Private>
+        ),
       },
       {
         path: "login",
