@@ -2,6 +2,7 @@ import React  from 'react';
 import HabitTracker from '../Components/HabitTracker';
 import HabitsCard from '../Components/HabitsCard';
 import HabitBenefits from '../Components/HabitBenefits';
+import ExtraSections from '../Components/ExtraSections';
  
  
 
@@ -20,6 +21,7 @@ const Home = () => {
       <HabitsCard latestHabitPromise={latestHabitPromise} />
        
       <HabitBenefits/>
+      <ExtraSections/>
     </div>
   );
 };
