@@ -7,6 +7,7 @@ import AddHabit from "../Pages/AddHabit";
 import LoginForm from "../Pages/LoginForm";
 import RegisterForm from "../Pages/RegisterForm";
 import Private from "../Private/Private";
+import HabitDetails from "../Components/HabitDetails";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,14 @@ const router = createBrowserRouter([
       {
         path: "register",
         element: <RegisterForm />,
+      },
+      {
+        path: "habitDetails/:id",
+        element: (
+          <Private>
+            <HabitDetails />
+          </Private>
+        ),
       },
     ],
   },

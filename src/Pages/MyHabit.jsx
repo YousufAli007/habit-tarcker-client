@@ -74,6 +74,40 @@ const handleDelete = async (habitId) => {
   }
 };
 
+const handleMarkComplete = async (habitId) => {
+  try {
+    const res = await axios.put(
+      `http://localhost:3000/habits/complete/${habitId}`
+    );
+
+    if (res.data.success) {
+      toast.success(res.data.message);
+
+      // Update local state: add today's date to completingHistory
+      const today = new Date().toISOString().slice(0, 10);
+
+      setMyHabits((prev) =>
+        prev.map((habit) =>
+          habit._id === habitId
+            ? {
+                ...habit,
+                completingHistory: [...(habit.completingHistory || []), today],
+                streak: (habit.streak || 0) + 1, // increment streak
+              }
+            : habit
+        )
+      );
+    } else if (res.data.already) {
+      toast.info("You already completed this habit today!");
+    } else {
+      toast.error(res.data.message || "Failed to mark complete");
+    }
+  } catch (err) {
+    console.error(err);
+    toast.error("Something went wrong!");
+  }
+};
+
  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
@@ -147,7 +181,10 @@ const handleDelete = async (habitId) => {
                       >
                         Delete
                       </button>
-                      <button className="text-emerald-400 hover:text-emerald-300 font-bold transition">
+                      <button
+                        onClick={() => handleMarkComplete(habit._id)}
+                        className="text-emerald-400 hover:text-emerald-300 font-bold transition"
+                      >
                         Mark Complete
                       </button>
                     </td>
@@ -203,6 +240,7 @@ const handleDelete = async (habitId) => {
 
                 <div className="modal-action flex justify-between items-center pt-4 border-t border-white/10">
                   <button
+                    type="button"
                     onClick={() => ref.current.close()}
                     className="btn bg-white/10 border border-white/20 text-white hover:bg-white/20"
                   >

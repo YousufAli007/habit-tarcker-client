@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
     const userEmail = e.target.email.value;
     const image = e.target.image.value;
     const description = e.target.description.value;
+    const completingHistory =[]
     
     const newHabit = {
       reminderTime,
@@ -24,6 +25,7 @@ import { toast } from "react-toastify";
       userEmail,
       image,
       description,
+      completingHistory
     };
     axios.post(`http://localhost:3000/habits`, newHabit)
     .then(data =>{
@@ -49,6 +51,7 @@ import { toast } from "react-toastify";
                    Habit Title
                  </label>
                  <input
+                 required
                    name="title"
                    type="text"
                    placeholder="e.g., Drink 8 Glasses of Water"
@@ -61,6 +64,7 @@ import { toast } from "react-toastify";
                    Category
                  </label>
                  <select
+                 required
                    name="category"
                    className="w-full px-4 py-3.5 rounded-2xl bg-white/15 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all appearance-none cursor-pointer text-sm md:text-base"
                  >
@@ -93,6 +97,7 @@ import { toast } from "react-toastify";
                    Description
                  </label>
                  <textarea
+                 required
                    name="description"
                    rows="3"
                    placeholder="Write a short description..."
@@ -106,6 +111,7 @@ import { toast } from "react-toastify";
                  </label>
                  <div className="relative">
                    <input
+                   required
                      name="time"
                      type="time"
                      className="w-full px-4 py-3.5 pr-12 rounded-2xl bg-white/15 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all text-sm md:text-base"
@@ -137,6 +143,7 @@ import { toast } from "react-toastify";
                    Image URL
                  </label>
                  <input
+                 required
                    name="image"
                    type="url"
                    placeholder="https://i.ibb.co/..."

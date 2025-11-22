@@ -1,5 +1,6 @@
  import React, { use } from "react";
 import Container from "./Container";
+import { Link } from "react-router";
 
  const HabitsCard = ({ latestHabitPromise }) => {
   const habits = use(latestHabitPromise);
@@ -52,14 +53,12 @@ import Container from "./Container";
 
                  {/* View Details Button */}
                  <div>
-                   <button
-                     className="w-full bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2 rounded-lg transition-colors duration-200"
-                     onClick={() =>
-                       alert("Redirect to habit details (login required)")
-                     }
+                   <Link
+                     to={`habitDetails/${habit._id}`}
+                     className="btn w-full bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2 rounded-lg transition-colors duration-200"
                    >
-                     View Details
-                   </button>
+                     view Details
+                   </Link>
                  </div>
                </div>
              </div>
