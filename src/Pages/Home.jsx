@@ -4,6 +4,9 @@ import HabitsCard from '../Components/HabitsCard';
 import HabitBenefits from '../Components/HabitBenefits';
 import ExtraSections from '../Components/ExtraSections';
 import Loding from '../Components/Loding';
+import Reveal from '../animation/Reveal';
+// import { motion } from "motion/react";
+// import Reveal from '../animation/Reveal';
  
  
 
@@ -29,13 +32,22 @@ const Home = () => {
   return (
     <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <HabitTracker />
+      {/* <motion.h1 animate={{ x: 500 }} className='text-white'>hello yousuf</motion.h1> */}
       {/* habits card sectin */}
-     
+
+  
+    <Reveal>
 
       <HabitsCard latestHabitPromise={latestHabitPromise} />
-       
-      <HabitBenefits/>
-      <ExtraSections/>
+    </Reveal>
+    <Reveal>
+      <HabitBenefits />
+    </Reveal>
+    <Reveal>
+      <ExtraSections />
+    </Reveal>
+    
+
     </div>
   );
 };

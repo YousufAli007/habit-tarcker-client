@@ -1,6 +1,7 @@
  import React from "react";
  import { FaBrain, FaSmile, FaClock, FaTrophy } from "react-icons/fa";
 import Container from "./Container";
+import Reveal from "../animation/Reveal";
 
  const HabitBenefits = () => {
    const benefits = [
@@ -31,30 +32,32 @@ import Container from "./Container";
    ];
 
    return (
-     <Container>
-       <div className=" mx-auto w-full bg-slate-800/60 rounded-3xl p-8">
-         <h2 className="text-4xl font-bold text-white text-center mb-4">
-           Why Build Habits?
-         </h2>
-         <p className="text-gray-300 text-center mb-12">
-           Small daily actions lead to big long-term results.
-         </p>
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-           {benefits.map((benefit, index) => (
-             <div
-               key={index}
-               className="bg-white/10 backdrop-blur-md rounded-2xl p-6 flex flex-col items-center text-center hover:scale-105 transition-transform duration-300"
-             >
-               <div className="mb-4">{benefit.icon}</div>
-               <h3 className="text-xl font-semibold text-white mb-2">
-                 {benefit.title}
-               </h3>
-               <p className="text-gray-300">{benefit.description}</p>
-             </div>
-           ))}
+    //  <Reveal>
+       <Container>
+         <div className=" mx-auto w-full bg-slate-800/60 rounded-3xl p-8">
+           <h2 className="text-4xl font-bold text-white text-center mb-4">
+             Why Build Habits?
+           </h2>
+           <p className="text-gray-300 text-center mb-12">
+             Small daily actions lead to big long-term results.
+           </p>
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+             {benefits.map((benefit, index) => (
+               <div
+                 key={index}
+                 className="bg-white/10 backdrop-blur-md rounded-2xl p-6 flex flex-col items-center text-center hover:scale-105 transition-transform duration-300"
+               >
+                 <div className="mb-4">{benefit.icon}</div>
+                 <h3 className="text-xl font-semibold text-white mb-2">
+                   {benefit.title}
+                 </h3>
+                 <p className="text-gray-300">{benefit.description}</p>
+               </div>
+             ))}
+           </div>
          </div>
-       </div>
-     </Container>
+       </Container>
+    //  </Reveal>
    );
  };
  export default HabitBenefits
