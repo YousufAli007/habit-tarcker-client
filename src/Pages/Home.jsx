@@ -17,7 +17,7 @@ const Home = () => {
    useEffect(() => {
      const timer = setTimeout(() => {
        setIsPreLoading(false);
-     }, 700);
+     }, 400);
 
      return () => clearTimeout(timer);
    }, []);

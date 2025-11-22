@@ -1,40 +1,59 @@
-import React, { use, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "../Components/Container";
 
-const habitsPromise = fetch("http://localhost:3000/all_habits").then((res) =>
-  res.json()
-);
-
 const PublicHabit = () => {
-  const habits = use(habitsPromise);
-
+  const [habits, setHabits] = useState([]);
+  const [loading, setLoading] = useState(true); // 🔹 loader state
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
 
-   
   const categories = ["Study", "Evening", "Fitness", "Work", "Morning"];
 
-   
+  // 🔥 Fetch data from API
+  useEffect(() => {
+    const fetchHabits = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/all_habits");
+        const data = await res.json();
+        setHabits(data);
+      } catch (error) {
+        console.error("Error fetching habits:", error);
+      } finally {
+        setLoading(false); // 🔹 stop loader
+      }
+    };
+
+    fetchHabits();
+  }, []);
+
+  // 🔹 Filter habits
   const filteredHabits = habits.filter((habit) => {
     const matchTitle = habit.habitTitle
       .toLowerCase()
       .includes(search.toLowerCase());
-
     const matchCategory = category ? habit.category === category : true;
-
     return matchTitle && matchCategory;
   });
 
+  // 🔹 Show loader while fetching
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="animate-spin h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full"></div>
+        <span className="text-white ml-4 text-lg">Loading...</span>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <h1 className=" text-3xl font-bold text-white text-center py-4">
+      <h1 className="text-3xl font-bold text-white text-center py-4">
         Latest Habits
       </h1>
 
       <Container>
-        
+        {/* Search + Category */}
         <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
-          {/* Search Bar */}
           <input
             type="text"
             placeholder="Search habits by title..."
@@ -43,14 +62,12 @@ const PublicHabit = () => {
             className="w-full sm:w-1/2 px-4 py-2 rounded-xl bg-slate-800 text-white border border-purple-600 focus:ring-2 focus:ring-purple-500 focus:outline-none"
           />
 
-          {/* Category Dropdown */}
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="w-full sm:w-1/3 px-4 py-2 rounded-xl bg-slate-800 text-white border border-purple-600 focus:ring-2 focus:ring-purple-500 focus:outline-none"
           >
             <option value="">All Categories</option>
-
             {categories.map((cat, idx) => (
               <option key={idx} value={cat}>
                 {cat}
@@ -77,28 +94,23 @@ const PublicHabit = () => {
 
               {/* Content */}
               <div className="p-5">
-                {/* Category */}
                 <div className="inline-block bg-purple-600 text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">
                   {habit.category}
                 </div>
 
-                {/* Title */}
                 <h3 className="text-white text-xl font-bold mb-2">
                   {habit.habitTitle}
                 </h3>
 
-                {/* Description */}
                 <p className="text-gray-300 text-sm mb-3">
                   {habit.description}
                 </p>
 
-                {/* Creator */}
                 <div className="text-gray-200 text-sm mb-4">
                   <span className="block">Creator:</span>
                   <span className="font-semibold">{habit.userName}</span>
                 </div>
 
-                {/* Button */}
                 <button
                   onClick={() =>
                     alert("Redirect to habit details (login required)")
