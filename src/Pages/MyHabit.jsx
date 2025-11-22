@@ -5,8 +5,8 @@ import { toast } from "react-toastify";
 
 const MyHabit = () => {
   const { user } = use(AuthContext);
-  const [myhabits, setMyHabits] = useState(null);
-  const [selectedHabit, setSelectedHabit] = useState(null); // ✅ store selected habit
+  const [myhabits, setMyHabits] = useState([]);
+  const [selectedHabit, setSelectedHabit] = useState(null);
   const ref = useRef();
 
   useEffect(() => {
@@ -18,132 +18,119 @@ const MyHabit = () => {
       .catch((err) => console.error(err));
   }, [user?.email]);
 
-  // ✅ When user clicks update
   const handleUpdate = (habit) => {
-    setSelectedHabit(habit); // store which habit we are editing
-    ref.current.showModal(); // open modal
+    setSelectedHabit(habit);
+    ref.current.showModal();
   };
-  // form update 
- const handleFromUpdate = async (e) => {
-   e.preventDefault();
 
-   
-   const form = e.target;
-   const updatedHabit = {
-     habitTitle: form.title.value,
-     category: form.category.value,
-   };
+  const handleFromUpdate = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const updatedHabit = {
+      habitTitle: form.title.value,
+      category: form.category.value,
+    };
 
-   try {
-     
-       await axios.put(
-       `http://localhost:3000/habits/${selectedHabit._id}`,
-       updatedHabit
-     );
-
+    try {
+      await axios.put(
+        `http://localhost:3000/habits/${selectedHabit._id}`,
+        updatedHabit
+      );
       toast.success("Habit updated successfully!");
-
-    
-     setMyHabits((prev) =>
-       prev.map((habit) =>
-         habit._id === selectedHabit._id ? { ...habit, ...updatedHabit } : habit
-       )
-     );
-
-     ref.current.close(); //  
-   } catch (error) {
-     toast.error(error)
-   }
- };
-// delate 
-const handleDelete = async (habitId) => {
-  try {
-    const res = await axios.delete(`http://localhost:3000/habits/${habitId}`);
-
-    if (res.data.success || res.data.deletedCount === 1) {
-      toast.success("Habit deleted successfully!");
-
-      // Remove from local state
-      setMyHabits((prev) => prev.filter((habit) => habit._id !== habitId));
-    } else {
-      toast.error(res.data.message || "Failed to delete habit");
-    }
-  } catch (error) {
-    console.error("Delete error:", error);
-    toast.error("Failed to delete habit!");
-  }
-};
-
-const handleMarkComplete = async (habitId) => {
-  try {
-    const res = await axios.put(
-      `http://localhost:3000/habits/complete/${habitId}`
-    );
-
-    if (res.data.success) {
-      toast.success(res.data.message);
-
-      // Update local state: add today's date to completingHistory
-      const today = new Date().toISOString().slice(0, 10);
-
       setMyHabits((prev) =>
         prev.map((habit) =>
-          habit._id === habitId
-            ? {
-                ...habit,
-                completingHistory: [...(habit.completingHistory || []), today],
-                streak: (habit.streak || 0) + 1, // increment streak
-              }
+          habit._id === selectedHabit._id
+            ? { ...habit, ...updatedHabit }
             : habit
         )
       );
-    } else if (res.data.already) {
-      toast.info("You already completed this habit today!");
-    } else {
-      toast.error(res.data.message || "Failed to mark complete");
+      ref.current.close();
+    } catch (error) {
+      toast.error("Failed to update habit!");
     }
-  } catch (err) {
-    console.error(err);
-    toast.error("Something went wrong!");
-  }
-};
+  };
 
- 
+  const handleDelete = async (habitId) => {
+    try {
+      const res = await axios.delete(`http://localhost:3000/habits/${habitId}`);
+      if (res.data.success || res.data.deletedCount === 1) {
+        toast.success("Habit deleted successfully!");
+        setMyHabits((prev) => prev.filter((habit) => habit._id !== habitId));
+      } else {
+        toast.error(res.data.message || "Failed to delete habit");
+      }
+    } catch (error) {
+      toast.error("Failed to delete habit!");
+    }
+  };
+
+  const handleMarkComplete = async (habitId) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:3000/habits/complete/${habitId}`
+      );
+
+      if (res.data.success) {
+        toast.success(res.data.message);
+        const today = new Date().toISOString().slice(0, 10);
+        setMyHabits((prev) =>
+          prev.map((habit) =>
+            habit._id === habitId
+              ? {
+                  ...habit,
+                  completingHistory: [
+                    ...(habit.completingHistory || []),
+                    today,
+                  ],
+                  streak: (habit.streak || 0) + 1,
+                }
+              : habit
+          )
+        );
+      } else if (res.data.already) {
+        toast.info("You already completed this habit today!");
+      } else {
+        toast.error(res.data.message || "Failed to mark complete");
+      }
+    } catch (err) {
+      toast.error("Something went wrong!");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-8 tracking-tight">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-4xl font-bold text-white mb-8 tracking-tight text-center">
           My Habits
         </h1>
 
-        <div className="backdrop-blur-md bg-white/10 rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+        <div className="backdrop-blur-md bg-white/10 rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-white/10">
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-purple-200 uppercase tracking-wider">
-                    Title
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-purple-200 uppercase tracking-wider">
-                    Category
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-purple-200 uppercase tracking-wider">
-                    Current Streak
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-purple-200 uppercase tracking-wider">
-                    Created Date
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-purple-200 uppercase tracking-wider">
-                    Actions
-                  </th>
+                  {[
+                    "Title",
+                    "Category",
+                    "Current Streak",
+                    "Created Date",
+                    "Actions",
+                  ].map((header) => (
+                    <th
+                      key={header}
+                      className="px-6 py-4 text-xs font-semibold text-purple-200 uppercase tracking-wider"
+                    >
+                      {header}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {myhabits?.map((habit, index) => (
+                {myhabits.map((habit, idx) => (
                   <tr
                     key={habit._id}
-                    className={`border-b border-white/5 transition-all hover:bg-white/5 ${
-                      index % 2 === 0 ? "bg-white/5" : ""
+                    className={`border-b border-white/5 hover:bg-white/5 transition-all ${
+                      idx % 2 === 0 ? "bg-white/5" : ""
                     }`}
                   >
                     <td className="px-6 py-5 text-sm font-medium text-white">
@@ -156,9 +143,14 @@ const handleMarkComplete = async (habitId) => {
                     </td>
                     <td className="px-6 py-5 text-sm">
                       <span className="font-bold text-yellow-400 flex items-center gap-1">
-                        {habit.streak || 0}
+                        {habit.streak || 0}{" "}
                         <span className="text-orange-400">🔥</span>
                       </span>
+                      {habit.streak >= 30 && (
+                        <span className="ml-2 text-green-400 font-semibold">
+                          🎉 Max Streak!
+                        </span>
+                      )}
                     </td>
                     <td className="px-6 py-5 text-sm text-gray-300">
                       {new Date(habit.created_at).toLocaleDateString("en-US", {
@@ -167,8 +159,7 @@ const handleMarkComplete = async (habitId) => {
                         year: "numeric",
                       })}
                     </td>
-                    <td className="px-6 py-5 text-sm font-medium space-x-3">
-                      {/* ✅ pass the habit to handleUpdate */}
+                    <td className="px-6 py-5 text-sm font-medium space-x-3 flex flex-wrap">
                       <button
                         onClick={() => handleUpdate(habit)}
                         className="text-cyan-400 hover:text-cyan-300 transition"
@@ -181,12 +172,14 @@ const handleMarkComplete = async (habitId) => {
                       >
                         Delete
                       </button>
-                      <button
-                        onClick={() => handleMarkComplete(habit._id)}
-                        className="text-emerald-400 hover:text-emerald-300 font-bold transition"
-                      >
-                        Mark Complete
-                      </button>
+                      {(habit.streak ?? 0) < 30 && (
+                        <button
+                          onClick={() => handleMarkComplete(habit._id)}
+                          className="text-emerald-400 hover:text-emerald-300 font-bold transition"
+                        >
+                          Mark Complete
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -225,7 +218,7 @@ const handleMarkComplete = async (habitId) => {
                   <select
                     name="category"
                     defaultValue={selectedHabit.category || ""}
-                    className="select select-bordered w-full bg-white/10 border-white/20 text-white focus:border-purple-400 z-[9999] "
+                    className="select select-bordered w-full bg-white/10 border-white/20 text-white focus:border-purple-400"
                   >
                     <option value="" disabled>
                       Select Category

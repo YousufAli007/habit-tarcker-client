@@ -138,12 +138,20 @@
          </div>
 
          {/* Mark Complete Button */}
-         <button
-           onClick={handleMarkComplete}
-           className="w-full py-3 text-lg font-semibold rounded-2xl bg-purple-600 hover:bg-purple-700 text-white shadow-xl transition-all duration-300 active:scale-95"
-         >
-           Mark Complete
-         </button>
+         <div>
+           {habit?.streak < 30 ? (
+             <button
+               onClick={handleMarkComplete}
+               className="w-full py-3 text-lg font-semibold rounded-2xl bg-purple-600 hover:bg-purple-700 text-white shadow-xl transition-all duration-300 active:scale-95"
+             >
+               Mark Complete
+             </button>
+           ) : (
+             <div className="w-full py-3 text-lg font-semibold rounded-2xl bg-green-600 text-white text-center shadow-xl">
+               🎉 Habit Completed! 30-Day Streak Achieved!
+             </div>
+           )}
+         </div>
        </div>
      </div>
    );

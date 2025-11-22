@@ -20,7 +20,7 @@ import { Link } from "react-router";
                {/* Image Section */}
                <div className="w-full h-48 overflow-hidden rounded-t-2xl">
                  <img
-                   src="https://i.ibb.co.com/HTtWdkhS/premium-photo-1664477086163-c1c55cfa5c4f.jpg"
+                   src={habit.image}
                    alt=""
                    className="w-full h-full object-cover"
                  />
