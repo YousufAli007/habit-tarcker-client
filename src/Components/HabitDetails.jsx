@@ -1,11 +1,15 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AuthContext from "../Context/AuthContext";
 
 const HabitDetails = () => {
+  const {user}=use(AuthContext)
   const [habit, setHabit] = useState(null);
+  console.log(user,habit)
+   
   const { id } = useParams();
 
   // Fetch habit details
@@ -137,20 +141,22 @@ const HabitDetails = () => {
         </div>
 
         {/* Mark Complete Button */}
-        <div>
-          {habit?.streak < 30 ? (
-            <button
-              onClick={handleMarkComplete}
-              className="w-full py-3 text-lg font-semibold rounded-2xl bg-purple-600 hover:bg-purple-700 text-white shadow-xl transition-all duration-300 active:scale-95"
-            >
-              Mark Complete
-            </button>
-          ) : (
-            <div className="w-full py-3 text-lg font-semibold rounded-2xl bg-green-600 text-white text-center shadow-xl">
-              🎉 Habit Completed! 30-Day Streak Achieved!
-            </div>
-          )}
-        </div>
+        {habit.userEmail === user.email && (
+          <div>
+            {habit?.streak < 30 ? (
+              <button
+                onClick={handleMarkComplete}
+                className="w-full py-3 text-lg font-semibold rounded-2xl bg-purple-600 hover:bg-purple-700 text-white shadow-xl transition-all duration-300 active:scale-95"
+              >
+                Mark Complete
+              </button>
+            ) : (
+              <div className="w-full py-3 text-lg font-semibold rounded-2xl bg-green-600 text-white text-center shadow-xl">
+                🎉 Habit Completed! 30-Day Streak Achieved!
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
