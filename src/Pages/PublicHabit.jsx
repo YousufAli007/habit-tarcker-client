@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Container from "../Components/Container";
+import { Link } from "react-router-dom"; // ✅ Fixed import
 
 const PublicHabit = () => {
   const [habits, setHabits] = useState([]);
-  const [loading, setLoading] = useState(true); // 🔹 loader state
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
 
   const categories = ["Study", "Evening", "Fitness", "Work", "Morning"];
 
-  // 🔥 Fetch data from API
   useEffect(() => {
     const fetchHabits = async () => {
       try {
@@ -17,16 +17,14 @@ const PublicHabit = () => {
         const data = await res.json();
         setHabits(data);
       } catch (error) {
-        console.error("Error fetching habits:", error);
+        console.error(error);
       } finally {
-        setLoading(false); // 🔹 stop loader
+        setLoading(false);
       }
     };
-
     fetchHabits();
   }, []);
 
-  // 🔹 Filter habits
   const filteredHabits = habits.filter((habit) => {
     const matchTitle = habit.habitTitle
       .toLowerCase()
@@ -35,7 +33,6 @@ const PublicHabit = () => {
     return matchTitle && matchCategory;
   });
 
-  // 🔹 Loader before data loads
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -52,7 +49,6 @@ const PublicHabit = () => {
       </h1>
 
       <Container>
-        {/* Search + Category */}
         <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
           <input
             type="text"
@@ -61,7 +57,6 @@ const PublicHabit = () => {
             onChange={(e) => setSearch(e.target.value)}
             className="w-full sm:w-1/2 px-4 py-2 rounded-xl bg-slate-800 text-white border border-purple-600 focus:ring-2 focus:ring-purple-500 focus:outline-none"
           />
-
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
@@ -76,7 +71,6 @@ const PublicHabit = () => {
           </select>
         </div>
 
-        {/* Habit Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-4">
           {filteredHabits.length > 0 ? (
             filteredHabits.map((habit) => (
@@ -86,9 +80,9 @@ const PublicHabit = () => {
               >
                 <div className="w-full h-48 overflow-hidden rounded-t-2xl">
                   <img
-                    src="https://i.ibb.co.com/HTtWdkhS/premium-photo-1664477086163-c1c55cfa5c4f.jpg"
+                    src={habit.image}
                     className="w-full h-full object-cover"
-                    alt="habit"
+                    alt={habit.habitTitle}
                   />
                 </div>
 
@@ -110,14 +104,12 @@ const PublicHabit = () => {
                     <span className="font-semibold">{habit.userName}</span>
                   </div>
 
-                  <button
-                    onClick={() =>
-                      alert("Redirect to habit details (login required)")
-                    }
-                    className="w-full bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2 rounded-lg transition-colors duration-200"
+                  <Link
+                    to={`/habitDetails/${habit._id}`} // ✅ Fixed path
+                    className="btn w-full bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2 rounded-lg transition-colors duration-200"
                   >
                     View Details
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))

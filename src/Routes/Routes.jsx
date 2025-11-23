@@ -8,6 +8,7 @@ import LoginForm from "../Pages/LoginForm";
 import RegisterForm from "../Pages/RegisterForm";
 import Private from "../Private/Private";
 import HabitDetails from "../Components/HabitDetails";
+import NotFound from "../Components/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -20,7 +21,11 @@ const router = createBrowserRouter([
       },
       {
         path: "myhabit",
-        element: <MyHabit />,
+        element: (
+          <Private>
+            <MyHabit />
+          </Private>
+        ),
       },
       {
         path: "publicHabit",
@@ -50,6 +55,10 @@ const router = createBrowserRouter([
           </Private>
         ),
       },
+      {
+        path:"*",
+        element:<NotFound/>
+      }
     ],
   },
 ]);

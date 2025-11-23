@@ -1,13 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState, useContext } from "react";
 import AuthContext from "../Context/AuthContext";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
+import "react-toastify/dist/ReactToastify.css";
 
 const MyHabit = () => {
   const { user } = useContext(AuthContext);
   const [myhabits, setMyHabits] = useState([]);
   const [selectedHabit, setSelectedHabit] = useState(null);
-  const [loading, setLoading] = useState(true); // loader state
+  const [loading, setLoading] = useState(true);
   const ref = useRef();
 
   // 🔹 Fetch habits
@@ -65,18 +67,36 @@ const MyHabit = () => {
     }
   };
 
-  // 🔹 Delete habit
+  // 🔹 Delete habit with SweetAlert2
   const handleDelete = async (habitId) => {
-    try {
-      const res = await axios.delete(`http://localhost:3000/habits/${habitId}`);
-      if (res.data.success || res.data.deletedCount === 1) {
-        toast.success("Habit deleted successfully!");
-        setMyHabits((prev) => prev.filter((habit) => habit._id !== habitId));
-      } else {
-        toast.error(res.data.message || "Failed to delete habit");
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const res = await axios.delete(
+          `http://localhost:3000/habits/${habitId}`
+        );
+        if (res.data.success || res.data.deletedCount === 1) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your habit has been deleted.",
+            icon: "success",
+          });
+          setMyHabits((prev) => prev.filter((habit) => habit._id !== habitId));
+        } else {
+          toast.error(res.data.message || "Failed to delete habit");
+        }
+      } catch (error) {
+        toast.error("Failed to delete habit!");
       }
-    } catch (error) {
-      toast.error("Failed to delete habit!");
     }
   };
 
@@ -113,7 +133,6 @@ const MyHabit = () => {
     }
   };
 
-  // 🔹 Loader while fetching
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -125,6 +144,7 @@ const MyHabit = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-white mb-8 tracking-tight text-center">
           My Habits
@@ -173,7 +193,7 @@ const MyHabit = () => {
                           {habit.streak || 0}{" "}
                           <span className="text-orange-400">🔥</span>
                         </span>
-                        {habit.streak >= 30 && (
+                        {(habit.streak || 0) >= 30 && (
                           <span className="ml-2 text-green-400 font-semibold">
                             🎉 Max Streak!
                           </span>
@@ -202,7 +222,7 @@ const MyHabit = () => {
                         >
                           Delete
                         </button>
-                        {habit.streak < 30 && (
+                        {(habit.streak || 0) < 30 && (
                           <button
                             onClick={() => handleMarkComplete(habit._id)}
                             className="text-emerald-400 hover:text-emerald-300 font-bold transition"
@@ -225,6 +245,7 @@ const MyHabit = () => {
           </div>
         </div>
 
+        {/* Update Modal */}
         <dialog
           ref={ref}
           className="modal modal-bottom sm:modal-middle overflow-visible"
