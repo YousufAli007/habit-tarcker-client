@@ -23,7 +23,10 @@ const AddHabit = () => {
     };
 
     try {
-      const res = await axios.post("http://localhost:3000/habits", newHabit);
+      const res = await axios.post(
+        "https://habit-tarcker-server.vercel.app/habits",
+        newHabit
+      );
       console.log(res.data); // Check backend response
       if (res.data.insertedId) {
         toast.success("Habit added successfully");

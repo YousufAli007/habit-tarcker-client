@@ -1,11 +1,9 @@
 import axios from "axios";
 const axisonInstance = axios.create({
-  baseURL: "http://localhost:3000/",
-})
- const useAxios = () => {
+  baseURL: "https://habit-tarcker-server.vercel.app/",
+});
+const useAxios = () => {
   return axisonInstance;
-     
- };
- 
- export default useAxios;
- 
+};
+
+export default useAxios;

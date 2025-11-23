@@ -13,7 +13,9 @@ const PublicHabit = () => {
   useEffect(() => {
     const fetchHabits = async () => {
       try {
-        const res = await fetch("http://localhost:3000/all_habits");
+        const res = await fetch(
+          "https://habit-tarcker-server.vercel.app/all_habits"
+        );
         const data = await res.json();
         setHabits(data);
       } catch (error) {

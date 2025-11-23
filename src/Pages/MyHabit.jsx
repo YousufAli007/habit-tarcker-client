@@ -20,7 +20,7 @@ const MyHabit = () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          `http://localhost:3000/all_habits?email=${user.email}`
+          `https://habit-tarcker-server.vercel.app/all_habits?email=${user.email}`
         );
         setMyHabits(res.data);
       } catch (error) {
@@ -50,7 +50,7 @@ const MyHabit = () => {
 
     try {
       await axios.put(
-        `http://localhost:3000/habits/${selectedHabit._id}`,
+        `https://habit-tarcker-server.vercel.app/habits/${selectedHabit._id}`,
         updatedHabit
       );
       toast.success("Habit updated successfully!");
@@ -82,7 +82,7 @@ const MyHabit = () => {
     if (result.isConfirmed) {
       try {
         const res = await axios.delete(
-          `http://localhost:3000/habits/${habitId}`
+          `https://habit-tarcker-server.vercel.app/habits/${habitId}`
         );
         if (res.data.success || res.data.deletedCount === 1) {
           Swal.fire({
@@ -104,7 +104,7 @@ const MyHabit = () => {
   const handleMarkComplete = async (habitId) => {
     try {
       const res = await axios.put(
-        `http://localhost:3000/habits/complete/${habitId}`
+        `https://habit-tarcker-server.vercel.app/habits/complete/${habitId}`
       );
       if (res.data.success) {
         toast.success(res.data.message);
